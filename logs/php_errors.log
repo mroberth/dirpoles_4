@@ -11040,3 +11040,70 @@ Stack trace:
 [07-Jan-2026 19:12:22 Europe/Berlin] SSE: Usuario 1 - Iteración 1455 - Último ID: 5
 [07-Jan-2026 19:12:24 Europe/Berlin] SSE: Cliente 1 desconectado
 [07-Jan-2026 19:12:24 Europe/Berlin] SSE: Finalizado para usuario 1 después de 1456 iteraciones
+[08-Jan-2026 18:19:15 Europe/Berlin] PHP Warning:  Undefined array key "estado" in C:\xampp\htdocs\DIRPOLES_4\app\Controllers\loginController.php on line 99
+[08-Jan-2026 18:19:15 Europe/Berlin] Error al registrar en la bitácora: Bitácora registrada
+[08-Jan-2026 18:19:18 Europe/Berlin] Módulos permitidos para rol 6: Array
+(
+    [0] => 1
+    [1] => 2
+    [2] => 3
+    [3] => 4
+    [4] => 5
+    [5] => 6
+    [6] => 7
+    [7] => 8
+    [8] => 9
+    [9] => 10
+    [10] => 11
+    [11] => 12
+    [12] => 13
+    [13] => 14
+    [14] => 15
+    [15] => 16
+    [16] => 17
+    [17] => 18
+)
+
+[08-Jan-2026 18:19:18 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\DIRPOLES_4\app\Controllers\sseController.php on line 27
+[08-Jan-2026 18:19:18 Europe/Berlin] ====== SSE INICIANDO ======
+[08-Jan-2026 18:19:18 Europe/Berlin] Usuario: 1
+[08-Jan-2026 18:19:18 Europe/Berlin] Session: 1ah479m3seahss5kmeb860gbvg
+[08-Jan-2026 18:19:18 Europe/Berlin] Último ID recibido: 5
+[08-Jan-2026 18:19:18 Europe/Berlin] ==========================
+[08-Jan-2026 18:19:18 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:19:36 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\DIRPOLES_4\app\Controllers\sseController.php on line 27
+[08-Jan-2026 18:19:36 Europe/Berlin] ====== SSE INICIANDO ======
+[08-Jan-2026 18:19:36 Europe/Berlin] Usuario: 1
+[08-Jan-2026 18:19:36 Europe/Berlin] Session: 1ah479m3seahss5kmeb860gbvg
+[08-Jan-2026 18:19:36 Europe/Berlin] Último ID recibido: 5
+[08-Jan-2026 18:19:36 Europe/Berlin] ==========================
+[08-Jan-2026 18:19:36 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:19:38 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:19:48 Europe/Berlin] SSE: Usuario 1 - Iteración 15 - Último ID: 5
+[08-Jan-2026 18:19:50 Europe/Berlin] SSE: Cliente 1 desconectado
+[08-Jan-2026 18:19:50 Europe/Berlin] SSE: Finalizado para usuario 1 después de 16 iteraciones
+[08-Jan-2026 18:19:56 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:20:06 Europe/Berlin] SSE: Usuario 1 - Iteración 15 - Último ID: 5
+[08-Jan-2026 18:20:16 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:20:36 Europe/Berlin] SSE: Usuario 1 - Iteración 30 - Último ID: 5
+[08-Jan-2026 18:20:36 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:20:56 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:21:06 Europe/Berlin] SSE: Usuario 1 - Iteración 45 - Último ID: 5
+[08-Jan-2026 18:21:16 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:21:36 Europe/Berlin] SSE: Usuario 1 - Iteración 60 - Último ID: 5
+[08-Jan-2026 18:21:36 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:21:57 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:22:07 Europe/Berlin] SSE: Usuario 1 - Iteración 75 - Último ID: 5
+[08-Jan-2026 18:22:17 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:22:37 Europe/Berlin] SSE: Usuario 1 - Iteración 90 - Último ID: 5
+[08-Jan-2026 18:22:37 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:22:57 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:23:07 Europe/Berlin] SSE: Usuario 1 - Iteración 105 - Último ID: 5
+[08-Jan-2026 18:23:17 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:23:37 Europe/Berlin] SSE: Usuario 1 - Iteración 120 - Último ID: 5
+[08-Jan-2026 18:23:37 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:23:57 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:24:07 Europe/Berlin] SSE: Usuario 1 - Iteración 135 - Último ID: 5
+[08-Jan-2026 18:24:17 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
+[08-Jan-2026 18:24:37 Europe/Berlin] SSE: Usuario 1 - Iteración 150 - Último ID: 5
+[08-Jan-2026 18:24:37 Europe/Berlin] SSE: No hay notificaciones nuevas para usuario 1 (último ID: 5)
