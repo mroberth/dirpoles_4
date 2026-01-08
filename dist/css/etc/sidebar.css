@@ -1,0 +1,101 @@
+:root {
+    --dirpoles-blue: #0044FF;
+    /* azul rey pedido */
+    --dirpoles-blue-600: #0033CC;
+}
+
+/* --- Forzar que la "collapse-inner bg-white" no sea blanca --- */
+#accordionSidebar .collapse-inner.bg-white {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0.25rem 0.25rem !important;
+}
+
+/* Ajuste general nav-link */
+#accordionSidebar .nav-link {
+    color: rgba(255, 255, 255, 0.95);
+    transition: background .12s ease, color .12s ease;
+}
+
+#accordionSidebar .nav-link:hover,
+#accordionSidebar .nav-item:hover>.nav-link {
+    background: rgba(0, 0, 0, 0.03);
+    color: #fff;
+}
+
+/* Estilo para los items dentro del collapse (las "fichas") */
+#accordionSidebar .collapse-inner .collapse-item {
+    display: block;
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: none;
+    padding: 0.45rem 1rem;
+    /* espacio cómodo */
+    margin: 0.18rem 0.5rem;
+    /* separación entre fichas */
+    border-radius: 8px;
+    /* ficha redondeada */
+    background: transparent;
+    /* por defecto translúcido */
+    transition: background .14s ease, transform .08s ease, box-shadow .12s ease;
+    font-size: .95rem;
+    border-left: 3px solid transparent;
+    /* espacio para indicador activo */
+    box-shadow: none;
+}
+
+/* Hover suave para cada sub-item */
+#accordionSidebar .collapse-inner .collapse-item:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.055);
+}
+
+/* Estado activo del sub-item */
+#accordionSidebar .collapse-inner .collapse-item.active,
+#accordionSidebar .collapse-inner .collapse-item:focus {
+    background: rgba(0, 68, 255, 0.14);
+    /* azul translúcido */
+    color: #fff;
+    border-left-color: var(--dirpoles-blue);
+    /* indicador azul */
+    padding-left: calc(1rem - 3px);
+    /* compensar espacio del border-left */
+    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+}
+
+
+/* Caret / chevron (si usas alguno dentro del a) */
+#accordionSidebar .nav-link .fa-chevron-down,
+#accordionSidebar .nav-link .submenu-caret {
+    transition: transform .18s ease;
+}
+
+#accordionSidebar .nav-link[aria-expanded="true"] .fa-chevron-down,
+#accordionSidebar .nav-link[aria-expanded="true"] .submenu-caret {
+    transform: rotate(180deg);
+}
+
+/* Estética adicional: disminuir el contraste agresivo del .sidebar-divider */
+#accordionSidebar .sidebar-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin: 0.6rem 0;
+}
+
+/* Cuando el sidebar está colapsado (varía según tu clase toggled) */
+#accordionSidebar.toggled .nav-text,
+#accordionSidebar.toggled .sidebar-brand-text {
+    display: none;
+}
+
+#accordionSidebar.toggled .collapse-inner .collapse-item {
+    display: none;
+    /* opcional: ocultar subitems en modo colapsado */
+}
+
+/* Asegurar que los enlaces del collapse (que quizá sean <a>) con fondo blanco heredado se sobreescriban */
+#accordionSidebar .collapse-inner .collapse-item.bg-white,
+#accordionSidebar .collapse-inner.bg-white .collapse-item {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+}

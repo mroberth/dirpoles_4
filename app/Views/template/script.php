@@ -1,0 +1,32 @@
+<script src="<?= BASE_URL ?>plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/fontawesome/js/all.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/sweetalert2/dist/sweetalert2.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/jquery/jquery.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/select2/js/select2.min.js"></script>
+
+<!-- Dashboard -->
+<script src="<?= BASE_URL ?>dist/js/dashboard/sb-admin5.js"></script>
+
+<!-- AlertManager -->
+<script src="<?= BASE_URL ?>dist/js/core/AlertManager.js"></script>
+<!-- Logout -->
+<script src="<?= BASE_URL ?>dist/js/core/logout.js"></script>
+<!-- Sidebar -->
+<script src="<?= BASE_URL ?>dist/js/dashboard/sidebar-active.js"></script>
+<!-- Script para select2 -->
+<script src="<?= BASE_URL ?>dist/js/core/select-2-init.js"></script>
+<script src="<?= BASE_URL ?>plugins/DataTables/js/datatables.min.js"></script>
+<!-- FullCalendar -->
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/core/index.global.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/core/locales/es.global.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/bootstrap5/index.global.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/daygrid/index.global.min.js"></script>
+
+<!-- Notificaciones -->
+<script src="<?= BASE_URL ?>dist/js/modulos/notificaciones/control.js"></script>
+
+<!-- PDF Customizado -->
+<script src="<?= BASE_URL ?>dist/js/core/PDFCustomizer.js"></script>
+
+<!-- Moment -->
+<script src="<?= BASE_URL ?>plugins/moment/moment.min.js"></script>
