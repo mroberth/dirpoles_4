@@ -86,6 +86,7 @@ include BASE_PATH . '/app/Views/template/head.php';
                                         
                                         <!-- ID del empleado (psicólogo) -->
                                         <input type="hidden" name="id_empleado" value="<?= $_SESSION['id_empleado'] ?>">
+                                        <input type="hidden" name="id_beneficiario" id="id_beneficiario" class="id_beneficiario_hidden">
 
                                         <div class="row">
                                             <!-- Motivo de Orientación -->
@@ -199,6 +200,7 @@ include BASE_PATH . '/app/Views/template/head.php';
    <?php include BASE_PATH . '/app/Views/template/script.php'; ?>
 
    <!-- JavaScript Modulares para Diagnóstico -->
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/orientacion/crear_diagnostico.js"></script>
                                                                 
 </body>
 </html>

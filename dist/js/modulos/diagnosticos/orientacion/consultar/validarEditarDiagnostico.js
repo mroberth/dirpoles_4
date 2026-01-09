@@ -1,16 +1,17 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('form-orientacion')
+/**
+ * Inicializa las validaciones para el formulario de edición de un diagnostico medico
+ * @param {number} id - ID del diagnostico que se está editando
+ */
+
+function validarEditarDiagnostico(id) {
+    const form = document.getElementById('formEditarOrientacion')
     if (!form) return;
 
     const elements = {
-        id_beneficiario: document.getElementById('id_beneficiario'),
-        beneficiario_nombre: document.getElementById('beneficiario_nombre'),
-        btnEliminarBeneficiario: document.getElementById('btnEliminarBeneficiario'),
-        motivo_orientacion: document.getElementById('motivo_orientacion'),
-        descripcion_orientacion: document.getElementById('descripcion_orientacion'),
-        indicaciones_orientacion: document.getElementById('indicaciones_orientacion'),
-        obs_adic_orientacion: document.getElementById('obs_adic_orientacion'),
-        limpiarFormulario: document.getElementById('limpiarFormularioOrientacion')
+        motivo_orientacion: document.getElementById('editar_motivo_orientacion'),
+        descripcion_orientacion: document.getElementById('editar_descripcion_orientacion'),
+        indicaciones_orientacion: document.getElementById('editar_indicaciones_orientacion'),
+        obs_adic_orientacion: document.getElementById('editar_obs_adic_orientacion'),
     };
 
     const showError = (field, msg) => {
@@ -46,135 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 .addClass('is-valid');
         }
     };
-
-    function inicializarDataTableBeneficiarios() {
-        $('#tablaBeneficiariosModal').DataTable({
-            ajax: {
-                url: 'beneficiarios_activos_data_json',
-                dataSrc: 'data'
-            },
-            searching: true,
-            pageLength: 10,
-            language: {
-                url: 'plugins/DataTables/js/languaje.json'
-            },
-            columns: [
-                { data: 'cedula_completa' },
-                { data: 'nombre_completo' },
-                { data: 'nombre_pnf' },
-                { data: 'seccion' },
-                {
-                    data: 'id_beneficiario',
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <button class="btn btn-sm btn-primary btn-seleccionar-beneficiario" 
-                                    data-id="${data}" 
-                                    data-nombre="${row.nombre_completo}">
-                                <i class="fas fa-check"></i> Seleccionar
-                            </button>
-                        `;
-                    }
-                }
-            ],
-            initComplete: function () {
-                $(document).on('click', '.btn-seleccionar-beneficiario', function () {
-                    const id = $(this).data('id');
-                    const nombre = $(this).data('nombre');
-
-                    elements.id_beneficiario.value = id;
-                    // Actualizar también los inputs ocultos
-                    $('.id_beneficiario_hidden').val(id);
-
-                    elements.beneficiario_nombre.value = nombre;
-                    clearError(elements.id_beneficiario);
-                    clearError(elements.beneficiario_nombre);
-                    toggleBotonEliminar();
-
-                    $('#modalSeleccionarBeneficiario').modal('hide');
-                    validarBeneficiario();
-                });
-            }
-        });
-    }
-
-    function limpiarFormulario() {
-        form.reset();
-
-
-        // Limpiar campos de beneficiario manualmente y ocultar botón de eliminar
-        elements.id_beneficiario.value = '';
-        elements.beneficiario_nombre.value = '';
-        $('.id_beneficiario_hidden').val('');
-        toggleBotonEliminar();
-
-        // Remover clases de validación y mensajes de error
-        const fields = [
-            elements.id_beneficiario,
-            elements.beneficiario_nombre,
-            elements.motivo_orientacion,
-            elements.descripcion_orientacion,
-            elements.indicaciones_orientacion,
-            elements.obs_adic_orientacion
-        ];
-
-        fields.forEach(field => {
-            field.classList.remove('is-valid', 'is-invalid');
-
-            const errorElement = document.getElementById(`${field.id}Error`);
-            if (errorElement) {
-                errorElement.textContent = "";
-                errorElement.style.display = 'none';
-            }
-
-            if ($(field).hasClass('select2')) {
-                $(field).next('.select2-container').find('.select2-selection')
-                    .removeClass('is-invalid')
-                    .removeClass('is-valid');
-            }
-        });
-    }
-
-    function validarBeneficiario() {
-        const beneficiario_nombre = elements.beneficiario_nombre.value;
-
-        if (beneficiario_nombre === "") {
-            showError(elements.id_beneficiario, "El beneficiario es obligatorio");
-            showError(elements.beneficiario_nombre, "El beneficiario es obligatorio");
-            return false;
-        }
-
-        clearError(elements.id_beneficiario);
-        clearError(elements.beneficiario_nombre);
-        toggleBotonEliminar();
-        return true;
-    }
-
-    function toggleBotonEliminar() {
-        if (elements.id_beneficiario && elements.id_beneficiario.value && elements.btnEliminarBeneficiario) {
-            elements.btnEliminarBeneficiario.style.display = 'block';
-        } else if (elements.btnEliminarBeneficiario) {
-            elements.btnEliminarBeneficiario.style.display = 'none';
-        }
-    }
-
-    function setupEliminarButtons() {
-        // Botón para eliminar beneficiario
-        if (elements.btnEliminarBeneficiario) {
-            elements.btnEliminarBeneficiario.addEventListener('click', function () {
-                elements.id_beneficiario.value = '';
-                // Limpiar también los inputs ocultos
-                $('.id_beneficiario_hidden').val('');
-
-                elements.beneficiario_nombre.value = '';
-                clearError(elements.id_beneficiario);
-                clearError(elements.beneficiario_nombre);
-                toggleBotonEliminar();
-                validarBeneficiario();
-            });
-        }
-    }
 
     function validarMotivoOrientacion() {
         let motivo_orientacion = elements.motivo_orientacion.value;
@@ -321,18 +193,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     //EventListener para tiempo real
-    elements.id_beneficiario.addEventListener('input', validarBeneficiario);
     elements.motivo_orientacion.addEventListener('input', validarMotivoOrientacion);
     elements.descripcion_orientacion.addEventListener('input', validarDescripcionOrientacion);
     elements.indicaciones_orientacion.addEventListener('input', validarIndicacionesOrientacion);
     elements.obs_adic_orientacion.addEventListener('input', validarObservaciones);
-    elements.limpiarFormulario.addEventListener('click', limpiarFormulario);
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const validaciones = [
-            validarBeneficiario(),
             validarMotivoOrientacion(),
             validarDescripcionOrientacion(),
             validarIndicacionesOrientacion(),
@@ -342,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (validaciones.every(v => v === true)) {
             try {
                 const formData = new FormData(form);
-                const response = await fetch(form.action, {
+                const response = await fetch('diagnostico_orientacion_actualizar', {
                     method: 'POST',
                     body: formData
                 });
@@ -354,7 +223,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (data.exito) {
                         AlertManager.success("Registro exitoso", data.mensaje).then(() => {
-                            window.location.reload();
+                            $('#modalDiagnostico').modal('hide');
+
+                            // Recargar DataTable
+                            if ($.fn.DataTable.isDataTable('#tabla_orientacion')) {
+                                $('#tabla_orientacion').DataTable().ajax.reload(null, false);
+                            }
                         });
                     } else {
                         AlertManager.error("Error", data.error || data.mensaje || "Error desconocido");
@@ -373,7 +247,4 @@ document.addEventListener('DOMContentLoaded', function () {
             AlertManager.error("Formulario incompleto", "Corrige los campos resaltados antes de continuar");
         }
     });
-
-    setupEliminarButtons();
-    inicializarDataTableBeneficiarios();
-});
+}
