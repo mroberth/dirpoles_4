@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-12-2025 a las 16:53:13
+-- Tiempo de generación: 11-01-2026 a las 00:41:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -120,10 +120,10 @@ CREATE TABLE `cita` (
 --
 
 INSERT INTO `cita` (`id_cita`, `fecha`, `hora`, `id_beneficiario`, `id_empleado`, `estatus`, `fecha_creacion`) VALUES
-(3, '2025-12-24', '10:00:00', 2, 3, 2, '2025-12-23'),
+(3, '2025-12-24', '10:00:00', 2, 3, 4, '2025-12-23'),
 (4, '2025-12-24', '12:00:00', 6, 24, 1, '2025-12-24'),
 (5, '2025-12-29', '08:30:00', 6, 24, 1, '2025-12-24'),
-(6, '2025-12-31', '09:00:00', 2, 3, 3, '2025-12-24');
+(6, '2026-01-28', '10:00:00', 2, 3, 3, '2025-12-24');
 
 -- --------------------------------------------------------
 
@@ -144,6 +144,14 @@ CREATE TABLE `consulta_medica` (
   `observaciones` varchar(255) NOT NULL,
   `fecha_creacion` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `consulta_medica`
+--
+
+INSERT INTO `consulta_medica` (`id_consulta_med`, `id_detalle_patologia`, `id_solicitud_serv`, `estatura`, `peso`, `tipo_sangre`, `motivo_visita`, `diagnostico`, `tratamiento`, `observaciones`, `fecha_creacion`) VALUES
+(2, 9, 9, 1.60, 52.00, 'A+', 'Motivo de la visita', 'Diagnostico de la visita', 'Tratamiento de la visita', 'Observaciones de la visita', '2026-01-04'),
+(3, 10, 10, 1.72, 68.00, 'B-', 'ASDASDASD', 'ASDASDA', 'ASDASD', 'ASDASD', '2026-01-04');
 
 -- --------------------------------------------------------
 
@@ -171,7 +179,9 @@ CREATE TABLE `consulta_psicologica` (
 
 INSERT INTO `consulta_psicologica` (`id_psicologia`, `id_solicitud_serv`, `id_detalle_patologia`, `tipo_consulta`, `diagnostico`, `tratamiento_gen`, `motivo_retiro`, `duracion_retiro`, `motivo_cambio`, `observaciones`, `fecha_creacion`) VALUES
 (3, 3, 3, 'Retiro temporal', 'No aplica', 'No aplica', 'Problemas personales/familiares', '6 meses', 'No aplica', 'Nada que observar del beneficiario.', '2025-12-29 15:37:09'),
-(5, 5, 5, 'Diagnóstico', 'diagnostico cambiado', 'este tratamiento', 'No aplica', 'No aplica', 'No aplica', 'asdasdasd', '2025-12-29 15:37:00');
+(5, 5, 5, 'Diagnóstico', 'diagnostico cambiado', 'este tratamiento', 'No aplica', 'No aplica', 'No aplica', 'asdasdasd', '2025-12-29 15:37:00'),
+(6, 6, 6, 'Cambio de carrera', 'No aplica', 'No aplica', 'No aplica', 'No aplica', 'Motivo ninguno', 'Observacioness', '2025-12-30 16:24:25'),
+(7, 7, 7, 'Cambio de carrera', 'No aplica', 'No aplica', 'No aplica', 'No aplica', 'prueba del admin', 'prueba del admin', '2026-01-02 19:30:44');
 
 -- --------------------------------------------------------
 
@@ -227,6 +237,14 @@ CREATE TABLE `detalle_insumo` (
   `cantidad_usada` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
+--
+-- Volcado de datos para la tabla `detalle_insumo`
+--
+
+INSERT INTO `detalle_insumo` (`id_detalle_insumo`, `id_consulta_med`, `id_insumo`, `cantidad_usada`) VALUES
+(1, 2, 1, '1'),
+(2, 3, 1, '5');
+
 -- --------------------------------------------------------
 
 --
@@ -256,9 +274,13 @@ CREATE TABLE `detalle_patologia` (
 --
 
 INSERT INTO `detalle_patologia` (`id_detalle_patologia`, `id_patologia`) VALUES
+(9, 1),
+(10, 1),
 (3, 2),
 (4, 2),
-(5, 2);
+(5, 2),
+(6, 2),
+(7, 2);
 
 -- --------------------------------------------------------
 
@@ -282,13 +304,6 @@ CREATE TABLE `discapacidad` (
   `fecha_creacion` date DEFAULT NULL,
   `carnet_discapacidad` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
---
--- Volcado de datos para la tabla `discapacidad`
---
-
-INSERT INTO `discapacidad` (`id_discapacidad`, `id_solicitud_serv`, `condicion_medica`, `cirugia_prev`, `toma_medicamentos_reg`, `naturaleza_discapacidad`, `impacto_disc`, `habilidades_funcionales_b`, `requiere_asistencia`, `dispositivo_asistencia`, `salud_mental`, `apoyo_psicologico`, `fecha_creacion`, `carnet_discapacidad`) VALUES
-(1, 12, 'ninguna, no tiene condición', 'No', 'No', 'naturaleza de la discap', 'impacto de la discap', 'habilidades funcionales', 'No', 'tiene cero dispositivos', 'salud mental estable', 'No', '2025-11-13', '1234444444');
 
 -- --------------------------------------------------------
 
@@ -360,14 +375,6 @@ CREATE TABLE `exoneracion` (
   `carnet_discapacidad` varchar(100) NOT NULL,
   `fecha_creacion` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
---
--- Volcado de datos para la tabla `exoneracion`
---
-
-INSERT INTO `exoneracion` (`id_exoneracion`, `id_solicitud_serv`, `motivo`, `otro_motivo`, `direccion_carta`, `direccion_estudiose`, `carnet_discapacidad`, `fecha_creacion`) VALUES
-(1, 8, 'inscripcion', 'si', 'uploads/trabajo social/exoneracion/cartas/6914c9e86723a_Carta de solicitud para la Empresa Fritz.pdf', '', 'D- 12121000', '2025-11-12'),
-(2, 10, 'pqt_grado', 'si', 'uploads/trabajo social/exoneracion/cartas/6914ddae1ca51_Carta de solicitud para la Empresa Fritz.pdf', '', 'D- 1234444', '2025-11-12');
 
 -- --------------------------------------------------------
 
@@ -516,7 +523,7 @@ CREATE TABLE `insumos` (
 --
 
 INSERT INTO `insumos` (`id_insumo`, `id_presentacion`, `nombre_insumo`, `descripcion`, `tipo_insumo`, `fecha_vencimiento`, `fecha_creacion`, `cantidad`, `estatus`) VALUES
-(1, 1, 'Acetaminofen', 'Acetaminofén de 500mg en pastillas', 'Medicamento', '2027-01-04', '2025-11-13', 9, 'Activo');
+(1, 1, 'Acetaminofén 500MG', 'Pastillas de acetaminofen', 'Medicamento', '2025-12-01', '2026-01-04', 2, 'Vencido');
 
 -- --------------------------------------------------------
 
@@ -528,7 +535,7 @@ CREATE TABLE `inventario_medico` (
   `id_inv_med` int(11) NOT NULL,
   `id_insumo` int(11) DEFAULT NULL,
   `id_empleado` int(11) NOT NULL,
-  `fecha_movimiento` date NOT NULL,
+  `fecha_movimiento` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `tipo_movimiento` varchar(100) NOT NULL,
   `cantidad` int(255) NOT NULL,
   `descripcion` varchar(255) NOT NULL
@@ -539,9 +546,12 @@ CREATE TABLE `inventario_medico` (
 --
 
 INSERT INTO `inventario_medico` (`id_inv_med`, `id_insumo`, `id_empleado`, `fecha_movimiento`, `tipo_movimiento`, `cantidad`, `descripcion`) VALUES
-(1, 1, 1, '2025-11-13', 'Registro', 0, 'Nuevo registro'),
-(2, 1, 1, '2025-11-13', 'Entrada', 10, 'Entrada'),
-(4, 1, 1, '2025-11-13', 'Salida', 1, 'Uso en jornada médica');
+(1, 1, 1, '2026-01-05 00:04:59', 'Registro', 0, 'Nuevo registro'),
+(2, 1, 1, '2026-01-05 00:16:49', 'Entrada', 10, 'Compra compulsiva'),
+(3, 1, 1, '2026-01-05 00:18:41', 'Salida', 1, 'Pérdida - Nada que agregar'),
+(4, 1, 1, '2026-01-05 01:45:20', 'Salida', 1, 'Salida de insumo para la consulta médica'),
+(5, 1, 1, '2026-01-05 01:47:19', 'Salida', 5, 'Salida por consulta médica'),
+(6, 1, 5, '2026-01-07 14:13:30', 'Salida', 1, 'Salida por consulta médica');
 
 -- --------------------------------------------------------
 
@@ -762,6 +772,13 @@ CREATE TABLE `orientacion` (
   `indicaciones_orientacion` mediumtext DEFAULT NULL,
   `fecha_creacion` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `orientacion`
+--
+
+INSERT INTO `orientacion` (`id_orientacion`, `id_solicitud_serv`, `motivo_orientacion`, `descripcion_orientacion`, `obs_adic_orientacion`, `indicaciones_orientacion`, `fecha_creacion`) VALUES
+(2, 13, 'creando', 'creando', 'creaciones', 'creando', '2026-01-09');
 
 -- --------------------------------------------------------
 
@@ -1001,7 +1018,12 @@ CREATE TABLE `solicitud_de_servicio` (
 
 INSERT INTO `solicitud_de_servicio` (`id_solicitud_serv`, `id_servicios`, `id_beneficiario`, `id_empleado`) VALUES
 (3, 1, 2, 3),
-(5, 1, 1, 3);
+(5, 1, 1, 3),
+(6, 1, 1, 3),
+(7, 1, 1, 1),
+(9, 2, 1, 1),
+(10, 2, 2, 1),
+(13, 3, 2, 7);
 
 -- --------------------------------------------------------
 
@@ -1419,13 +1441,13 @@ ALTER TABLE `cita`
 -- AUTO_INCREMENT de la tabla `consulta_medica`
 --
 ALTER TABLE `consulta_medica`
-  MODIFY `id_consulta_med` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_consulta_med` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `consulta_psicologica`
 --
 ALTER TABLE `consulta_psicologica`
-  MODIFY `id_psicologia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_psicologia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_ficha_equipo`
@@ -1443,7 +1465,7 @@ ALTER TABLE `detalle_ficha_mobiliario`
 -- AUTO_INCREMENT de la tabla `detalle_insumo`
 --
 ALTER TABLE `detalle_insumo`
-  MODIFY `id_detalle_insumo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle_insumo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_insumo_jornadas`
@@ -1455,7 +1477,7 @@ ALTER TABLE `detalle_insumo_jornadas`
 -- AUTO_INCREMENT de la tabla `detalle_patologia`
 --
 ALTER TABLE `detalle_patologia`
-  MODIFY `id_detalle_patologia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_detalle_patologia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `discapacidad`
@@ -1479,7 +1501,7 @@ ALTER TABLE `estado_cita`
 -- AUTO_INCREMENT de la tabla `exoneracion`
 --
 ALTER TABLE `exoneracion`
-  MODIFY `id_exoneracion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_exoneracion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `fames`
@@ -1521,7 +1543,7 @@ ALTER TABLE `insumos`
 -- AUTO_INCREMENT de la tabla `inventario_medico`
 --
 ALTER TABLE `inventario_medico`
-  MODIFY `id_inv_med` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_inv_med` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `inventario_mob`
@@ -1575,7 +1597,7 @@ ALTER TABLE `mantenimiento_vehiculos`
 -- AUTO_INCREMENT de la tabla `orientacion`
 --
 ALTER TABLE `orientacion`
-  MODIFY `id_orientacion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_orientacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `patologia`
@@ -1635,7 +1657,7 @@ ALTER TABLE `servicio`
 -- AUTO_INCREMENT de la tabla `solicitud_de_servicio`
 --
 ALTER TABLE `solicitud_de_servicio`
-  MODIFY `id_solicitud_serv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_solicitud_serv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_equipo`

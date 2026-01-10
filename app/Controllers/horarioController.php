@@ -5,8 +5,31 @@ use App\Models\PermisosModel;
 use App\Models\NotificacionesModel;
 
 function crear_horario(){
-    $modelo = new HorarioModel();
-    require_once BASE_PATH . '/app/Views/horario/crear_horario.php';
+    $permisos = new PermisosModel();
+    $modulo = 'Horarios';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+        
+        require_once BASE_PATH . '/app/Views/horario/crear_horario.php';
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function validar_dia_horario() {
@@ -141,7 +164,31 @@ function registrar_horario(){
 }
 
 function consultar_horarios(){
-    require_once BASE_PATH . '/app/Views/horario/consultar_horarios.php';
+    $permisos = new PermisosModel();
+    $modulo = 'Horarios';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+        
+        require_once BASE_PATH . '/app/Views/horario/consultar_horarios.php';
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function horarios_data_json(){

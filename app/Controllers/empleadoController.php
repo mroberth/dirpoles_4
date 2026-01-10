@@ -5,18 +5,73 @@ use App\Models\PermisosModel;
 use App\Models\NotificacionesModel;
 
 function showView(){
+    $permisos = new PermisosModel();
     $modelo = new EmpleadoModel();
-    $tipos_empleado = $modelo->manejarAccion('vista');
-    $empleados_act = $modelo->manejarAccion('empleadosActivos');
-    $empleados_inact = $modelo->manejarAccion('empleadosInact');
-    $total_empleados = $modelo->manejarAccion('empleadosTotales');
-    $empleados_nuevos_mes = $modelo->manejarAccion('empleadosNuevos');
+    $modulo = 'Empleados';
 
-    require_once BASE_PATH . '/app/Views/empleado/crear_empleado.php';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+
+        $tipos_empleado = $modelo->manejarAccion('vista');
+        $empleados_act = $modelo->manejarAccion('empleadosActivos');
+        $empleados_inact = $modelo->manejarAccion('empleadosInact');
+        $total_empleados = $modelo->manejarAccion('empleadosTotales');
+        $empleados_nuevos_mes = $modelo->manejarAccion('empleadosNuevos');
+
+        require_once BASE_PATH . '/app/Views/empleado/crear_empleado.php';
+
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function showList(){
-    require_once BASE_PATH . '/app/Views/empleado/consultar_empleados.php';
+    $permisos = new PermisosModel();
+    $modelo = new EmpleadoModel();
+    $modulo = 'Empleados';
+
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+
+        $empleados = $modelo->manejarAccion('empleadosTotales');
+
+        require_once BASE_PATH . '/app/Views/empleado/consultar_empleados.php';
+
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function validar_cedula() {

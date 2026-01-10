@@ -5,42 +5,67 @@ use App\Models\PermisosModel;
 use App\Models\NotificacionesModel;
 
 function crear_cita(){
+    $permisos = new PermisosModel();
     $modelo = new CitasModel();
+    $modulo = 'Citas';
     $modelo->__set('id_empleado', $_SESSION['id_empleado']);
-    
-    // Obtener resultados
-    $resultado_totales = $modelo->manejarAccion('citasTotales');
-    $resultado_estadisticas = $modelo->manejarAccion('estadisticas');
-    
-    // Inicializar variables con valores por defecto
-    $citas_totales = 0;
-    $citas_pendientes = 0;
-    $citas_rechazadas = 0;
-    $citas_atendidas = 0;
-    
-    // Procesar totales
-    if($resultado_totales['exito']){
-        $citas_totales = $resultado_totales['total'];  // ← Número directo
-    } else {
-        error_log("Error en citasTotales: " . $resultado_totales['mensaje']);
-    }
-    
-    // Procesar estadísticas
-    if($resultado_estadisticas['exito']){
-        $datos = $resultado_estadisticas['data'];  // ← Array con todos los datos
+
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+
+        // Obtener resultados
+        $resultado_totales = $modelo->manejarAccion('citasTotales');
+        $resultado_estadisticas = $modelo->manejarAccion('estadisticas');
         
-        $citas_pendientes = $datos['pendientes'] ?? 0;
-        $citas_rechazadas = $datos['rechazadas'] ?? 0;
-        $citas_atendidas = $datos['atendidas'] ?? 0;
+        // Inicializar variables con valores por defecto
+        $citas_totales = 0;
+        $citas_pendientes = 0;
+        $citas_rechazadas = 0;
+        $citas_atendidas = 0;
         
-        // También puedes usar el total de aquí si prefieres
-        // $citas_totales = $datos['total'] ?? 0;
-    } else {
-        error_log("Error en estadisticas: " . $resultado_estadisticas['mensaje']);
+        // Procesar totales
+        if($resultado_totales['exito']){
+            $citas_totales = $resultado_totales['total'];  // ← Número directo
+        } else {
+            error_log("Error en citasTotales: " . $resultado_totales['mensaje']);
+        }
+        
+        // Procesar estadísticas
+        if($resultado_estadisticas['exito']){
+            $datos = $resultado_estadisticas['data'];  // ← Array con todos los datos
+            
+            $citas_pendientes = $datos['pendientes'] ?? 0;
+            $citas_rechazadas = $datos['rechazadas'] ?? 0;
+            $citas_atendidas = $datos['atendidas'] ?? 0;
+            
+            // También puedes usar el total de aquí si prefieres
+            // $citas_totales = $datos['total'] ?? 0;
+        } else {
+            error_log("Error en estadisticas: " . $resultado_estadisticas['mensaje']);
+        }
+        
+        // Pasar variables a la vista
+        require_once BASE_PATH . '/app/Views/citas/crear_cita.php';
+
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
     }
-    
-    // Pasar variables a la vista
-    require_once BASE_PATH . '/app/Views/citas/crear_cita.php';
 }
 
 function cita_registrar(){
@@ -150,7 +175,31 @@ function cita_registrar(){
 }
 
 function consultar_citas(){
-    require_once BASE_PATH . '/app/Views/citas/consultar_citas.php';
+    $permisos = new PermisosModel();
+    $modulo = 'Citas';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+
+        require_once BASE_PATH . '/app/Views/citas/consultar_citas.php';
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 //mostrar citas
 function citas_data_json(){

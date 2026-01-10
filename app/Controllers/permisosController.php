@@ -3,16 +3,40 @@ use App\Models\PermisosModel;
 
 function crear_permisos(){
     $modelo = new PermisosModel();
-    $data['tipos_empleado'] = $modelo->manejarAccion('tipos_empleados');
-    $data['modulos'] = $modelo->manejarAccion('obtener_modulos');
-    $data['permisos'] = $modelo->manejarAccion('obtenerPermisos');
+    $permisos = new PermisosModel();
+    $modulo = 'Permisos';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
 
-    // NUEVO: obtener mapa completo y pasarlo a la vista
-    $resMapa = $modelo->manejarAccion('mapa_permisos_todos');
-    $data['mapa_permisos'] = ($resMapa['exito'] ?? false) ? $resMapa['data'] : [];
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
 
+        $data['tipos_empleado'] = $modelo->manejarAccion('tipos_empleados');
+        $data['modulos'] = $modelo->manejarAccion('obtener_modulos');
+        $data['permisos'] = $modelo->manejarAccion('obtenerPermisos');
 
-    require_once BASE_PATH . '/app/Views/permisos/crear_permisos.php';
+        // NUEVO: obtener mapa completo y pasarlo a la vista
+        $resMapa = $modelo->manejarAccion('mapa_permisos_todos');
+        $data['mapa_permisos'] = ($resMapa['exito'] ?? false) ? $resMapa['data'] : [];
+
+        require_once BASE_PATH . '/app/Views/permisos/crear_permisos.php';
+        
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 // Endpoint para obtener permisos por módulo y rol

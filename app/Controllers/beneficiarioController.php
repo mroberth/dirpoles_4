@@ -5,17 +5,66 @@ use App\Models\NotificacionesModel;
 use App\Models\PermisosModel;
 
 function crear_beneficiario(){
+    $permisos = new PermisosModel();
     $modelo = new BeneficiarioModel();
-    $pnfs = $modelo->manejarAccion('obtener_pnf');
-    $beneficiarios_act = $modelo->manejarAccion('beneficiarios_activos');
-    $beneficiarios_inact = $modelo->manejarAccion('beneficiarios_inactivos');
-    $beneficiarios_totales = $modelo->manejarAccion('beneficiarios_totales');
-    $beneficiarios_diag = $modelo->manejarAccion('beneficiarios_con_diagnosticos');
-    require_once BASE_PATH . '/app/Views/beneficiario/crear_beneficiario.php';
+    $modulo = 'Beneficiarios';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+        
+        $pnfs = $modelo->manejarAccion('obtener_pnf');
+        $beneficiarios_act = $modelo->manejarAccion('beneficiarios_activos');
+        $beneficiarios_inact = $modelo->manejarAccion('beneficiarios_inactivos');
+        $beneficiarios_totales = $modelo->manejarAccion('beneficiarios_totales');
+        $beneficiarios_diag = $modelo->manejarAccion('beneficiarios_con_diagnosticos');
+        require_once BASE_PATH . '/app/Views/beneficiario/crear_beneficiario.php';
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function consultar_beneficiarios(){
-    require_once BASE_PATH . '/app/Views/beneficiario/consultar_beneficiarios.php';
+    $permisos = new PermisosModel();
+    $modelo = new BeneficiarioModel();
+    $modulo = 'Beneficiarios';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+        
+        require_once BASE_PATH . '/app/Views/beneficiario/consultar_beneficiarios.php';
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function beneficiarios_data_json(){

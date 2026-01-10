@@ -23,8 +23,10 @@ function streamNotificaciones() {
     set_time_limit(0);
     ignore_user_abort(true);
     
-    // Iniciar y cerrar sesión rápidamente
-    session_start();
+    // Iniciar sesión solo si no está activa
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     $id_empleado = $_SESSION['id_empleado'] ?? null;
     
     if (!$id_empleado) {
@@ -43,12 +45,13 @@ function streamNotificaciones() {
     $modelo = new NotificacionesModel();
     $iteracion = 0;
     
-    // DEBUG: Log inicial
+    /* 
     error_log("====== SSE INICIANDO ======");
     error_log("Usuario: $id_empleado");
     error_log("Session: $session_id");
     error_log("Último ID recibido: $ultimoId");
     error_log("==========================");
+    */
     
     // Buffer de salida
     if (ob_get_level() == 0) ob_start();
@@ -97,10 +100,11 @@ function streamNotificaciones() {
                 
                 error_log("SSE: Notificaciones enviadas, último ID ahora: $ultimoId");
             } else {
-                // DEBUG: Para ver que está consultando
+                /*
                 if ($iteracion % 10 == 0) {
                     error_log("SSE: No hay notificaciones nuevas para usuario $id_empleado (último ID: $ultimoId)");
                 }
+                */
             }
             
             // Heartbeat cada 15 segundos (para mantener conexión)
@@ -125,10 +129,11 @@ function streamNotificaciones() {
         sleep(2);
         $iteracion++;
         
-        // Log cada 30 segundos
+        /*
         if ($iteracion % 15 === 0) {
             error_log("SSE: Usuario $id_empleado - Iteración $iteracion - Último ID: $ultimoId");
         }
+        */
         
         // Prevenir loops infinitos (máximo 1 hora)
         if ($iteracion > 1800) { // 2 segundos * 1800 = 1 hora
@@ -137,5 +142,5 @@ function streamNotificaciones() {
         }
     }
     
-    error_log("SSE: Finalizado para usuario $id_empleado después de $iteracion iteraciones");
+    // error_log("SSE: Finalizado para usuario $id_empleado después de $iteracion iteraciones");
 }

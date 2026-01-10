@@ -6,9 +6,20 @@ use App\Models\NotificacionesModel;
 use App\Models\PermisosModel;
 
 function crear_insumos(){
-    try {
-        $modelo = new InvMedicinaModel();
-        
+    $modelo = new InvMedicinaModel();
+    $permisos = new PermisosModel();
+    $modulo = 'Inventario Medico';
+    try{
+
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+
         // Obtener listas y estadísticas
         $presentaciones = $modelo->manejarAccion('obtenerPresentaciones');
         $estadisticas = $modelo->manejarAccion('obtenerEstadisticas');
@@ -21,8 +32,17 @@ function crear_insumos(){
 
         require_once BASE_PATH . '/app/Views/inventario_medico/registrar_insumos.php';
 
-    } catch (\Throwable $e) {
-        die("Error en el controlador: " . $e->getMessage());
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
     }
 }
 
@@ -126,7 +146,32 @@ function registrar_insumo(){
 }
 
 function consultar_inventario(){
-    require_once BASE_PATH . '/app/Views/inventario_medico/consultar_inventario.php';
+    $modelo = new InvMedicinaModel();
+    $permisos = new PermisosModel();
+    $modulo = 'Inventario Medico';
+    try{
+        $verificar = ['Modulo' => $modulo, 'Permiso' => 'Leer', 'Rol' => $_SESSION['id_tipo_empleado']];
+        foreach($verificar as $atributo => $valor){
+            $permisos->__set($atributo, $valor);
+        }
+
+        if(!$permisos->manejarAccion('Verificar')){
+            throw new Exception('No tienes permiso para realizar esta acción');
+        }
+
+        require_once BASE_PATH . '/app/Views/inventario_medico/consultar_inventario.php';
+    }catch(Throwable $e){
+        // Si la petición NO es AJAX, mostramos la vista de error
+        if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+            require_once BASE_PATH . '/app/Views/errors/access_denied.php';
+        } else {
+            // Si es AJAX, devolvemos JSON
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ]);
+        }
+    }
 }
 
 function inventario_data_json(){
