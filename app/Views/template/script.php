@@ -30,3 +30,7 @@
 
 <!-- Moment -->
 <script src="<?= BASE_URL ?>plugins/moment/moment.min.js"></script>
+
+<!-- jsPDF & html2canvas -->
+<script src="<?= BASE_URL ?>plugins/jspdf/jspdf.umd.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/html2canvas/html2canvas.min.js"></script>

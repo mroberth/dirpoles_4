@@ -439,12 +439,6 @@ CREATE TABLE `gestion_emb` (
   `fecha_creacion` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
---
--- Volcado de datos para la tabla `gestion_emb`
---
-
-INSERT INTO `gestion_emb` (`id_gestion`, `id_solicitud_serv`, `id_detalle_patologia`, `semanas_gest`, `codigo_patria`, `serial_patria`, `estado`, `fecha_creacion`) VALUES
-(5, 17, 10, 22, 12344444, 1231231444, 'En proceso', '2025-11-19');
 
 -- --------------------------------------------------------
 
