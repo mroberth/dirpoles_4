@@ -56,7 +56,7 @@ class BitacoraModel extends SecurityModel {
     }
     
     public function __get($atributo){
-        return isset($this->atributos[$atributo]) ? $this->atributos[$atributo] : null;
+        return $this->atributos[$atributo] ?? null;
     }
 
     public function manejarAccion($action) {
@@ -68,7 +68,7 @@ class BitacoraModel extends SecurityModel {
                 return $this->obtener_bitacora();
             
             default:
-                return ['status' => false, 'msj' => 'Acción no implementada'];
+                return ['status' => false, 'mensaje' => 'Acción no implementada'];
         }
     }
 

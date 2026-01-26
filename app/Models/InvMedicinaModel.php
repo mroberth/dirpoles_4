@@ -8,8 +8,37 @@ use PDO;
 class InvMedicinaModel extends BusinessModel {
     private $atributos = [];
 
-    public function __set($name, $value){
-        $this->atributos[$name] = $value;
+    public function __set($nombre, $valor){
+        $valor = \is_string($valor) ? trim($valor) : $valor;
+
+        if ($nombre === 'nombre_insumo') {
+            $valor = mb_convert_case($valor, MB_CASE_TITLE, "UTF-8");
+        }
+        
+        if ($nombre === 'descripcion') {
+            $valor = ucfirst(mb_strtolower($valor, "UTF-8"));
+        }
+
+        $validaciones = [
+            'nombre_insumo' => fn($v) => !empty($v) && preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\-]{2,100}$/u', $v),
+            'tipo_insumo' => fn($v) => !empty($v) && in_array($v, ['Medicamento', 'Material', 'Quirúrgico']), // Ajustar según los tipos reales
+            'id_presentacion' => fn($v) => is_numeric($v) && $v > 0,
+            'fecha_vencimiento' => fn($v) => !empty($v) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $v),
+            'estatus' => fn($v) => \in_array($v, ['Agotado', 'Activo', 'Vencido']),
+            'descripcion' => fn($v) => !empty($v) && preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s,.\-#]{2,250}$/u', $v),
+            'cantidad' => fn($v) => is_numeric($v) && $v >= 0,
+            'id_empleado' => fn($v) => is_numeric($v) && $v > 0,
+            'id_insumo' => fn($v) => is_numeric($v) && $v > 0
+        ];
+
+        // Validar solo si existe una regla definida para el atributo
+        if (isset($validaciones[$nombre])) {
+            if (!$validaciones[$nombre]($valor)) {
+                throw new Exception("Valor inválido para el campo: $nombre");
+            }
+        }
+
+        $this->atributos[$nombre] = $valor;
     }
 
     public function __get($name){

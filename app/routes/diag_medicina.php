@@ -47,3 +47,8 @@ Router::post('diagnostico_medicina_eliminar', function() {
     load_controller('medicinaController.php');
     eliminar_diagnostico_medicina();
 });
+
+Router::get('medicina_stats_json', function() {
+    load_controller('medicinaController.php');
+    medicina_stats_json();
+});

@@ -190,6 +190,7 @@ $(function () {
                             <div class="btn-group btn-group-sm" role="group">
                                 <button class="btn btn-success btn-estado-cita" 
                                         data-id="${data}"
+                                        data-id-beneficiario="${row.id_beneficiario}"
                                         data-bs-toggle="tooltip"
                                         title="Cambiar estado">
                                     <i class="fas fa-check"></i>
@@ -208,6 +209,7 @@ $(function () {
                                 </button>
                                 <button class="btn btn-danger btn-eliminar-cita" 
                                         data-id="${data}"
+                                        data-id-beneficiario="${row.id_beneficiario}"
                                         data-bs-toggle="tooltip"
                                         title="Eliminar cita">
                                     <i class="fas fa-trash"></i>
@@ -218,8 +220,6 @@ $(function () {
                 }
             ],
             initComplete: function (settings, json) {
-                console.log('DataTable de citas inicializado');
-
                 // Inicializar tooltips
                 initTooltips();
 
@@ -252,7 +252,8 @@ $(function () {
         $(document).off('click', '.btn-estado-cita').on('click', '.btn-estado-cita', function (e) {
             e.preventDefault();
             const id = $(this).data('id');
-            actualizarEstadoCita(id);
+            const id_beneficiario = $(this).data('id-beneficiario');
+            actualizarEstadoCita(id, id_beneficiario);
         });
 
         // Botón VER
@@ -273,11 +274,12 @@ $(function () {
         $(document).off('click', '.btn-eliminar-cita').on('click', '.btn-eliminar-cita', function (e) {
             e.preventDefault();
             const id = $(this).data('id');
-            eliminarCita(id);
+            const id_beneficiario = $(this).data('id-beneficiario');
+            eliminarCita(id, id_beneficiario);
         });
     }
 
-    function eliminarCita(id) {
+    function eliminarCita(id, id_beneficiario) {
         Swal.fire({
             title: '¿Está seguro?',
             text: '¿Está seguro de eliminar esta Cita? Esta acción no se puede deshacer.',
@@ -294,14 +296,14 @@ $(function () {
             focusCancel: true
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await ejecutarEliminacion(id);
+                await ejecutarEliminacion(id, id_beneficiario);
             }
         }).catch((error) => {
             console.error('Error en el modal de confirmación:', error);
         });
     }
 
-    async function ejecutarEliminacion(id) {
+    async function ejecutarEliminacion(id, id_beneficiario) {
         try {
             // Enviar solicitud de eliminación
             const response = await fetch('eliminar_cita', {
@@ -311,7 +313,8 @@ $(function () {
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: new URLSearchParams({
-                    id_cita: id
+                    id_cita: id,
+                    id_beneficiario: id_beneficiario
                 })
             });
 

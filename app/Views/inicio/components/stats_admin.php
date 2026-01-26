@@ -88,7 +88,7 @@
         <div class="card-body">
             <div class="text-center">
                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Orientación</div>
-                <div class="h6 mb-0 font-weight-bold text-gray-800"><?= $total_sesiones_ori ?? 0; ?> Ses.</div>
+                <div class="h6 mb-0 font-weight-bold text-gray-800" id="stat-orientacion-total"></div>
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@
         <div class="card-body">
             <div class="text-center">
                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">T. Social</div>
-                <div class="h6 mb-0 font-weight-bold text-gray-800"><?= $total_casos_soc ?? 0; ?> Casos</div>
+                <div class="h6 mb-0 font-weight-bold text-gray-800" id="stat-trabajo-social-total"></div>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@
         <div class="card-body">
             <div class="text-center">
                 <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Discapacidad</div>
-                <div class="h6 mb-0 font-weight-bold text-gray-800"><?= $diagnosticos_discapacidad ?? 0; ?> Diag.</div>
+                <div class="h6 mb-0 font-weight-bold text-gray-800" id="stat-discapacidad-total"></div>
             </div>
         </div>
     </div>

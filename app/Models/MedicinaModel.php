@@ -42,6 +42,9 @@ class MedicinaModel extends BusinessModel{
             case 'stats_admin':
                 return $this->statsAdmin();
 
+            case 'stats_empleado':
+                return $this->statsEmpleado();
+
             default: 
                 throw new Exception('Acción no permitida');
         }
@@ -347,5 +350,54 @@ class MedicinaModel extends BusinessModel{
             return 0;
         }
     }
-    
+
+    private function statsEmpleado(){
+        try {
+            // 1. Consultas médicas del mes actual con JOIN a solicitud_de_servicio
+            $query = "SELECT COUNT(*) as total 
+                    FROM consulta_medica cm
+                    INNER JOIN solicitud_de_servicio sds ON cm.id_solicitud_serv = sds.id_solicitud_serv
+                    WHERE sds.id_empleado = :id_empleado 
+                    AND MONTH(cm.fecha_creacion) = MONTH(CURRENT_DATE()) 
+                    AND YEAR(cm.fecha_creacion) = YEAR(CURRENT_DATE())";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id_empleado', $this->__get('id_empleado'), PDO::PARAM_INT);
+            $stmt->execute();
+            $consulta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // 2. Total de solicitudes de servicio tipo medicina (servicio = 2)
+            // Esto cuenta todas las solicitudes de medicina del empleado (consultas totales)
+            $query2 = "SELECT COUNT(*) as total FROM solicitud_de_servicio 
+                    WHERE id_servicios = 2 
+                    AND id_empleado = :id_empleado";
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->bindValue(':id_empleado', $this->__get('id_empleado'), PDO::PARAM_INT);
+            $stmt2->execute();
+            $total_consultas = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            // 3. Insumos con bajo stock (cantidad < 10)
+            $query3 = "SELECT COUNT(*) as bajo_stock FROM insumos WHERE cantidad < 10";
+            $stmt3 = $this->conn->query($query3);
+            $bajo_stock = $stmt3->fetch(PDO::FETCH_ASSOC);
+
+            // 4. Insumos disponibles
+            $query4 = "SELECT COUNT(*) as disponibles FROM insumos 
+                    WHERE cantidad >= 1 AND estatus = 'Disponible'";
+            $stmt4 = $this->conn->query($query4);
+            $disponibles = $stmt4->fetch(PDO::FETCH_ASSOC);
+            
+            return [
+                'exito' => true,
+                'total_consultas' => $total_consultas['total'],  // Para "Consultas Totales"
+                'consultas_mes' => $consulta['total'],           // Para "Consultas del Mes"
+                'insumos_disponibles' => $disponibles['disponibles'],  // Para "Insumos disponibles"
+                'insumos_bajo_stock' => $bajo_stock['bajo_stock'],     // Para "Insumos con bajo stock"
+            ];
+        } catch (Throwable $e) {
+            return [
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
 }

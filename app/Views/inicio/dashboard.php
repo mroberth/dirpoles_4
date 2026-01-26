@@ -60,21 +60,10 @@ include 'app/Views/template/head.php';
                         ?>
                     </div>
 
-                    <!-- Content Row - Main Dynamic Content -->
+                <!-- Content Row - Main Dynamic Content --> 
                     <div class="row">
-                        <?php if (in_array($tipoEmpleado, ['Psicologo', 'Administrador', 'Superusuario'])): ?>
-                            <!-- Sección del Calendario para roles que lo requieren -->
-                            <?php include 'components/calendario.php'; ?>
-                        <?php else: ?>
-                            <!-- Contenido alternativo para otros roles para llenar el espacio -->
-                            <div class="col-lg-8 mb-4">
-                                <?php include 'components/grafico_actividad.php'; ?>
-                            </div>
-                            <div class="col-lg-4 mb-4">
-                                <?php include 'components/actividad_reciente.php'; ?>
-                                <?php include 'components/acciones_rapidas.php'; ?>
-                            </div>
-                        <?php endif; ?>
+                        <!-- Sección del Calendario para roles que lo requieren -->
+                        <?php include 'components/calendario.php'; ?>
                     </div>
 
                 </div>
@@ -95,8 +84,10 @@ include 'app/Views/template/head.php';
 
 
    <?php include 'app/Views/template/script.php'; ?>
-   <script src="dist/js/modulos/dashboard/dashboard_stats.js"></script>
-   <script src="dist/js/modulos/citas/calendario.js"></script>
+   <?php include 'app/Views/template/scripts-dashboard.php'; ?>
+
+   <!-- Calendario personal (debe ir al final) -->
+    <script src="<?= BASE_URL ?>dist/js/modulos/calendario/calendario_personal.js"></script>
 
 <style>
     /* Ajustar altura mínima de las celdas */

@@ -117,7 +117,6 @@ function cita_registrar(){
         $registro = $modelo->manejarAccion('registrar_cita');
         $beneficiario = $modelo->manejarAccion('obtener_beneficiario_cita');
         $empleado = $modelo->manejarAccion('obtener_empleado_cita');
-        $nombre_beneficiario = $beneficiario['cedula_completa'] . ' - ' . $beneficiario['nombre_completo'];
 
         if($registro['exito'] === true){
             if($_SESSION['tipo_empleado'] === 'Administrador'){
@@ -125,7 +124,7 @@ function cita_registrar(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Registro',
-                'descripcion' => "El Administrador {$_SESSION['nombre']} registro una cita al empleado: {$empleado['nombre_completo']} con el beneficiario: $nombre_beneficiario"
+                'descripcion' => "El Administrador {$_SESSION['nombre']} registro una cita al empleado: {$empleado['nombre_completo']} con el beneficiario: $beneficiario"
                 ];
                 foreach($bitacora_data as $atributo => $valor){
                     $bitacora->__set($atributo, $valor);
@@ -136,8 +135,8 @@ function cita_registrar(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Registro',
-                'descripcion' => "El Empleado {$_SESSION['nombre']} registro una cita con el beneficiario $nombre_beneficiario"
-                ];
+                'descripcion' => "El Empleado {$_SESSION['nombre']} registro una cita con el beneficiario $beneficiario"
+                ];  
                 foreach($bitacora_data as $atributo => $valor){
                     $bitacora->__set($atributo, $valor);
                 }
@@ -447,14 +446,14 @@ function actualizar_cita(){
         $actualizacion = $modelo->manejarAccion('actualizar_cita');
         $beneficiario = $modelo->manejarAccion('obtener_beneficiario_cita');
         $empleado = $modelo->manejarAccion('obtener_empleado_cita');
-        $nombre_beneficiario = $beneficiario['cedula_completa'] . ' - ' . $beneficiario['nombre_completo'];
+        
 
         if(!empty($actualizacion['exito'])){
             $bitacora_data = [
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Actualización',
-                'descripcion' => "El empleado {$_SESSION['nombre']} actualizó la cita de la fecha {$fecha} del empleado {$empleado['nombre_completo']} con el beneficiario: $nombre_beneficiario"
+                'descripcion' => "El empleado {$_SESSION['nombre']} actualizó la cita de la fecha {$fecha} del empleado {$empleado['nombre_completo']} con el beneficiario: $beneficiario"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);
@@ -514,11 +513,14 @@ function eliminar_cita(){
         }
 
         $id_cita = filter_input(INPUT_POST, 'id_cita', FILTER_SANITIZE_NUMBER_INT);
-        if (!$id_cita) {
-            throw new Exception('ID de cita faltante.');
+        $id_beneficiario = filter_input(INPUT_POST, 'id_beneficiario', FILTER_DEFAULT);
+        if (empty($id_beneficiario) || empty($id_cita)) {
+            throw new Exception('Faltan datos para eliminar la cita.');
         }
 
         $modelo->__set('id_cita', $id_cita);
+        $modelo->__set('id_beneficiario', $id_beneficiario);
+        $beneficiario = $modelo->manejarAccion('obtener_beneficiario_cita');
         $eliminacion = $modelo->manejarAccion('eliminar_cita');
 
         if(!empty($eliminacion['exito'])){
@@ -526,7 +528,7 @@ function eliminar_cita(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Eliminación',
-                'descripcion' => "El empleado {$_SESSION['nombre']} eliminó la cita {$id_cita}"
+                'descripcion' => "El empleado {$_SESSION['nombre']} eliminó la cita del beneficiario {$beneficiario}"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);
@@ -612,10 +614,13 @@ function actualizar_estado_cita(){
 
         $id_cita = filter_input(INPUT_POST, 'id_cita', FILTER_SANITIZE_NUMBER_INT);
         $estatus = filter_input(INPUT_POST, 'estatus', FILTER_SANITIZE_NUMBER_INT);
+        $id_beneficiario = filter_input(INPUT_POST, 'id_beneficiario', FILTER_DEFAULT);
 
         $modelo->__set('id_cita', $id_cita);
         $modelo->__set('estatus', $estatus);
+        $modelo->__set('id_beneficiario', $id_beneficiario);
 
+        $beneficiario = $modelo->manejarAccion('obtener_beneficiario_cita');
         $resp = $modelo->manejarAccion('actualizar_estado_cita');
         $estado_cita = $modelo->manejarAccion('obtener_estatus');
 
@@ -624,7 +629,7 @@ function actualizar_estado_cita(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => 'Citas',
                 'accion' => 'Actualización',
-                'descripcion' => "El empleado {$_SESSION['nombre']} actualizó el estado de la cita ID: {$id_cita} a {$estado_cita}"
+                'descripcion' => "El empleado {$_SESSION['nombre']} actualizó el estado de la cita del beneficiario: {$beneficiario} a {$estado_cita}"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);

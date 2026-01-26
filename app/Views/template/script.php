@@ -1,36 +1,36 @@
-<script src="<?= BASE_URL ?>plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?= BASE_URL ?>plugins/fontawesome/js/all.min.js"></script>
-<script src="<?= BASE_URL ?>plugins/sweetalert2/dist/sweetalert2.min.js"></script>
+<!-- jQuery primero (importante para Bootstrap) -->
 <script src="<?= BASE_URL ?>plugins/jquery/jquery.min.js"></script>
-<script src="<?= BASE_URL ?>plugins/select2/js/select2.min.js"></script>
 
-<!-- Dashboard -->
-<script src="<?= BASE_URL ?>dist/js/dashboard/sb-admin5.js"></script>
+<!-- Bootstrap -->
+<script src="<?= BASE_URL ?>plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- AlertManager -->
-<script src="<?= BASE_URL ?>dist/js/core/AlertManager.js"></script>
-<!-- Logout -->
-<script src="<?= BASE_URL ?>dist/js/core/logout.js"></script>
-<!-- Sidebar -->
-<script src="<?= BASE_URL ?>dist/js/dashboard/sidebar-active.js"></script>
-<!-- Script para select2 -->
-<script src="<?= BASE_URL ?>dist/js/core/select-2-init.js"></script>
-<script src="<?= BASE_URL ?>plugins/DataTables/js/datatables.min.js"></script>
-<!-- FullCalendar -->
+<!-- FullCalendar CORE primero -->
 <script src="<?= BASE_URL ?>plugins/@fullcalendar/core/index.global.min.js"></script>
 <script src="<?= BASE_URL ?>plugins/@fullcalendar/core/locales/es.global.min.js"></script>
+
+<!-- FullCalendar PLUGINS después -->
 <script src="<?= BASE_URL ?>plugins/@fullcalendar/bootstrap5/index.global.min.js"></script>
 <script src="<?= BASE_URL ?>plugins/@fullcalendar/daygrid/index.global.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/interaction/index.global.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/timegrid/index.global.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/@fullcalendar/list/index.global.min.js"></script>
 
-<!-- Notificaciones -->
-<script src="<?= BASE_URL ?>dist/js/modulos/notificaciones/control.js"></script>
-
-<!-- PDF Customizado -->
-<script src="<?= BASE_URL ?>dist/js/core/PDFCustomizer.js"></script>
-
-<!-- Moment -->
+<!-- Otros plugins -->
+<script src="<?= BASE_URL ?>plugins/fontawesome/js/all.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/sweetalert2/dist/sweetalert2.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/select2/js/select2.min.js"></script>
+<script src="<?= BASE_URL ?>plugins/DataTables/js/datatables.min.js"></script>
 <script src="<?= BASE_URL ?>plugins/moment/moment.min.js"></script>
-
-<!-- jsPDF & html2canvas -->
 <script src="<?= BASE_URL ?>plugins/jspdf/jspdf.umd.min.js"></script>
 <script src="<?= BASE_URL ?>plugins/html2canvas/html2canvas.min.js"></script>
+
+<!-- Tus scripts -->
+<script src="<?= BASE_URL ?>dist/js/dashboard/sb-admin5.js"></script>
+<script src="<?= BASE_URL ?>dist/js/core/AlertManager.js"></script>
+<script src="<?= BASE_URL ?>dist/js/core/logout.js"></script>
+<script src="<?= BASE_URL ?>dist/js/dashboard/sidebar-active.js"></script>
+<script src="<?= BASE_URL ?>dist/js/core/select-2-init.js"></script>
+<script src="<?= BASE_URL ?>dist/js/modulos/notificaciones/control.js"></script>
+<script src="<?= BASE_URL ?>dist/js/core/PDFCustomizer.js"></script>
+
+

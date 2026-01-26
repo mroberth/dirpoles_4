@@ -254,7 +254,7 @@ function empleado_registrar(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Registro',
-                'descripcion' => "Se registró el empleado: $nombre $apellido ($tipo_cedula-$cedula)"
+                'descripcion' => "El empleado {$_SESSION['nombre']} registró el empleado: $nombre $apellido ($tipo_cedula-$cedula)"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);
@@ -485,7 +485,7 @@ function empleado_actualizar(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Actualización',
-                'descripcion' => "Se actualizó el empleado: $nombre $apellido ($tipo_cedula-$cedula)"
+                'descripcion' => "El empleado {$_SESSION['nombre']} actualizó un dato del empleado: $nombre $apellido ($tipo_cedula-$cedula)"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);
@@ -563,7 +563,7 @@ function empleado_eliminar(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Eliminación',
-                'descripcion' => "Se eliminó el empleado: " . $datos['nombre'] . " " . $datos['apellido'] . " (" . $datos['tipo_cedula'] . $datos['cedula'] . ")"
+                'descripcion' => "El empleado {$_SESSION['nombre']} eliminó el empleado: " . $datos['nombre'] . " " . $datos['apellido'] . " (" . $datos['tipo_cedula'] . $datos['cedula'] . ")"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);

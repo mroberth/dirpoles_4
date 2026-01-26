@@ -1,9 +1,10 @@
 /**
  * Función para mostrar los detalles de una cita en un modal
  * @param {number} id - ID de la cita
+ * @param {number} id_beneficiario - ID del beneficiario
  */
 
-async function actualizarEstadoCita(idCita) {
+async function actualizarEstadoCita(id_cita, id_beneficiario) {
     try {
         const response = await fetch('obtener_estados_cita', {
             method: 'POST',
@@ -11,7 +12,7 @@ async function actualizarEstadoCita(idCita) {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams({ id_cita: idCita })
+            body: new URLSearchParams({ id_cita: id_cita, id_beneficiario: id_beneficiario })
         });
 
         if (!response.ok) throw new Error('Error HTTP');
@@ -26,7 +27,7 @@ async function actualizarEstadoCita(idCita) {
         const modal = document.getElementById('modalCita');
         const modalBody = modal.querySelector('.modal-body');
 
-        modalBody.innerHTML = generarModalEstadoCita(data);
+        modalBody.innerHTML = generarModalEstadoCita(data, id_beneficiario);
 
         // Título y subtítulo dinámicos (opcional pero recomendado)
         document.getElementById('modalCitaTitle').textContent = 'Cambiar estado de la cita';
@@ -42,7 +43,7 @@ async function actualizarEstadoCita(idCita) {
     }
 }
 
-function generarModalEstadoCita(data) {
+function generarModalEstadoCita(data, id_beneficiario) {
     const opciones = data.estados.map(e => `
         <option value="${e.id_estado}" ${e.id_estado == data.estado_actual ? 'selected' : ''}>
             ${e.nombre}
@@ -90,6 +91,7 @@ function generarModalEstadoCita(data) {
             </div>
 
             <input type="hidden" name="id_cita" value="${data.id_cita}">
+            <input type="hidden" name="id_beneficiario" value="${id_beneficiario}">
 
             <div class="modal-footer d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

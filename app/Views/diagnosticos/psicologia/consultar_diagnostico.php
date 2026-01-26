@@ -1,5 +1,5 @@
 <?php 
-$titulo = "Consultar Diagnosticos";
+$titulo = "Psicología";
 include 'app/Views/template/head.php';
 $es_admin = in_array($_SESSION['tipo_empleado'], ['Administrador', 'Superusuario']);
 ?>

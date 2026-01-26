@@ -6,7 +6,7 @@
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                         Sesiones Totales</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_sesiones_ori ?? 0; ?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="stat-total-conteo"></div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-user-graduate fa-2x text-primary"></i>
@@ -24,7 +24,7 @@
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                         Sesiones del Mes</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $sesiones_mes_ori ?? 0; ?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="stat-orientacion-mes"></div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-calendar-check fa-2x text-info"></i>
@@ -42,7 +42,7 @@
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                         Estudiantes Atendidos</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $estudiantes_ori ?? 0; ?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="stat-sin-indicaciones"></div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-graduation-cap fa-2x text-success"></i>
@@ -60,7 +60,7 @@
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                         En Seguimiento</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $seguimiento_ori ?? 0; ?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="stat-con-observaciones"></div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-user-edit fa-2x text-warning"></i>

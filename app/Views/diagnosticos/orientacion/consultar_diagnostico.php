@@ -1,5 +1,5 @@
 <?php 
-$titulo = "Consultar Diagnosticos";
+$titulo = "Orientación";
 include 'app/Views/template/head.php';
 $es_admin = in_array($_SESSION['tipo_empleado'], ['Administrador', 'Superusuario']);
 ?>
@@ -26,7 +26,7 @@ $es_admin = in_array($_SESSION['tipo_empleado'], ['Administrador', 'Superusuario
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Gestionar Diagnosticos de Orientación</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Gestionar Diagnósticos de Orientación</h1>
                     </div>
 
                     <!-- Content Row (Diagnostico Medicina) -->

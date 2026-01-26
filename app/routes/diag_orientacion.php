@@ -37,3 +37,13 @@ Router::post('orientacion_eliminar', function() {
     load_controller('orientacionController.php');
     orientacion_eliminar();
 });
+
+Router::get('stats_orientacion_admin', function() {
+    load_controller('orientacionController.php');
+    stats_orientacion_admin();
+});
+
+Router::get('stats_orientacion', function() {
+    load_controller('orientacionController.php');
+    stats_orientacion();
+});

@@ -85,7 +85,7 @@ function verDiagnostico(id) {
                         </div>
                     </div>
                     <div class="mt-3 text-center">
-                        <button class="btn btn-outline-danger" onclick="verCita(${id})">
+                        <button class="btn btn-outline-danger" onclick="verDiagnostico(${id})">
                             <i class="fas fa-redo me-1"></i> Reintentar
                         </button>
                     </div>

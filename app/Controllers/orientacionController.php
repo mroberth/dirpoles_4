@@ -83,7 +83,7 @@ function orientacion_registrar(){
         $beneficiario = $modelo->manejarAccion('obtener_beneficiario');
 
         if($resultado['exito'] === true){
-        $bitacora_data = [
+            $bitacora_data = [
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Registro',
@@ -370,4 +370,21 @@ function orientacion_eliminar(){
         ]);
         exit();
     }
+}
+
+function stats_orientacion_admin(){
+    $modelo = new OrientacionModel();
+    
+    $estadisticas = $modelo->manejarAccion('stats_admin');
+    header('Content-Type: application/json');
+    echo json_encode($estadisticas);
+}
+
+function stats_orientacion(){
+    $modelo = new OrientacionModel();
+    $modelo->__set('id_empleado', $_SESSION['id_empleado']);
+
+    $estadisticas = $modelo->manejarAccion('stats_empleado');
+    header('Content-Type: application/json');
+    echo json_encode($estadisticas);
 }

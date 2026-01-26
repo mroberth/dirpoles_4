@@ -1,5 +1,5 @@
 <?php 
-$titulo = "Psicologia";
+$titulo = "Psicología";
 include BASE_PATH . '/app/Views/template/head.php';
 ?>
 

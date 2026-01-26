@@ -29,7 +29,7 @@ include BASE_PATH . '/app/Views/template/head.php';
                                 <i class="fas fa-user-injured fa-sm text-white-50 me-1"></i> Registrar Estudio Socio-Económico
                             </button>
 
-                            <a href="<?= BASE_URL ?>trabajo_social_consultar" 
+                            <a href="<?= BASE_URL ?>diagnostico_trabajo_social_consultar" 
                             class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm ms-2">
                                 <i class="fas fa-clipboard-list fa-sm text-white-50 me-1"></i> Consultar Diagnósticos
                             </a>

@@ -168,7 +168,7 @@ function beneficiario_registrar(){
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Registro',
-                'descripcion' => "Se registró el beneficiario: $nombres $apellidos ($tipo_cedula-$cedula)"
+                'descripcion' => "El empleado {$_SESSION['nombre']} registró el beneficiario: $nombres $apellidos ($tipo_cedula-$cedula)"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);
@@ -335,14 +335,14 @@ function beneficiario_actualizar() {
         
         // Ejecutar actualización
         $actualizacion = $modelo->manejarAccion('actualizar_beneficiario');
-        
+        $beneficiario = $modelo->manejarAccion('obtener_beneficiario');
         if($actualizacion['exito'] === true){
             // Registrar en bitácora
             $bitacora_data = [
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Actualización',
-                'descripcion' => "Se actualizó el beneficiario: $nombres $apellidos ($tipo_cedula-$cedula)"
+                'descripcion' => "El empleado {$_SESSION['nombre']} actualizó un dato del beneficiario: $beneficiario"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);
@@ -413,7 +413,7 @@ function beneficiario_eliminar() {
         
         // Obtener información del beneficiario antes de eliminar (para bitácora)
         $modelo->__set('id_beneficiario', $id_beneficiario);
-        $beneficiario = $modelo->manejarAccion('beneficiario_detalle');
+        $beneficiario = $modelo->manejarAccion('obtener_beneficiario');
         
         if (!$beneficiario) {
             throw new Exception('El beneficiario no existe o ya fue eliminado');
@@ -433,7 +433,7 @@ function beneficiario_eliminar() {
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
                 'accion' => 'Eliminación',
-                'descripcion' => "Se eliminó el beneficiario: $nombres $apellidos ($tipo_cedula-$cedula)"
+                'descripcion' => "El empleado {$_SESSION['nombre']} eliminó el beneficiario: $beneficiario"
             ];
             foreach($bitacora_data as $atributo => $valor){
                 $bitacora->__set($atributo, $valor);

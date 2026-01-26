@@ -335,7 +335,7 @@ function actualizar_diagnostico_medicina(){
         $bitacora_data = [
                 'id_empleado' => $_SESSION['id_empleado'],
                 'modulo' => $modulo,
-                'accion' => 'Registro',
+                'accion' => 'Actualización',
                 'descripcion' => "El Empleado {$_SESSION['nombre']} actualizo el diagnóstico médico del beneficiario $beneficiario"
             ];
             foreach($bitacora_data as $atributo => $valor){
@@ -445,6 +445,21 @@ function eliminar_diagnostico_medicina(){
         }
 
     } catch(Throwable $e){
+        echo json_encode([
+            'exito' => false,
+            'mensaje' => $e->getMessage()
+        ]);
+    }
+}
+
+function medicina_stats_json(){
+    $modelo = new MedicinaModel();
+    $modelo->__set('id_empleado', $_SESSION['id_empleado']);
+    
+    try{
+        $resultado = $modelo->manejarAccion('stats_empleado');
+        echo json_encode($resultado);
+    }catch(Throwable $e){
         echo json_encode([
             'exito' => false,
             'mensaje' => $e->getMessage()

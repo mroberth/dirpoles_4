@@ -1,5 +1,5 @@
 <?php 
-$titulo = "Consultar Diagnósticos";
+$titulo = "Trabajo Social";
 include 'app/Views/template/head.php';
 $es_admin = in_array($_SESSION['tipo_empleado'], ['Administrador', 'Superusuario']);
 ?>
@@ -70,139 +70,29 @@ $es_admin = in_array($_SESSION['tipo_empleado'], ['Administrador', 'Superusuario
     </div>
 
     <?php include 'app/Views/template/script.php'; ?>
+    <?php include 'app/Views/diagnosticos/modal_diagnosticos.php'; ?>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/consultar_general.js"></script>
+    <!-- Becas -->
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/becas/verBeca.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/becas/editarBeca.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/becas/validarEditarBeca.js"></script>
+
+    <!-- Exoneraciones -->
+
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/exoneraciones/verExoneracion.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/exoneraciones/editarExoneracion.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/exoneraciones/validarEditarExoneracion.js"></script>
+
+    <!-- FAMES -->
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/fames/verFames.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/fames/editarFames.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/fames/validarEditarFames.js"></script>
+
+    <!-- Embarazadas -->
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/embarazadas/verEmbarazada.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/embarazadas/editarEmbarazada.js"></script>
+    <script src="<?= BASE_URL ?>dist/js/modulos/diagnosticos/trabajo_social/embarazadas/validarEditarEmb.js"></script>
     
-    <script>
-        let tablaTS;
-        const BASE_URL = "<?= BASE_URL ?>";
-
-        document.addEventListener('DOMContentLoaded', function() {
-            cargarTabla('becas'); // Cargar por defecto
-        });
-
-        function cargarTabla(tipo) {
-            // Destruir tabla previa si existe
-            if ($.fn.DataTable.isDataTable('#tabla_ts')) {
-                $('#tabla_ts').DataTable().destroy();
-                $('#tabla_ts').empty(); 
-            }
-
-            let columnas = [];
-
-            // Definir columnas según el tipo
-            // IMPORTANTE: Todas las columnas que usen render con 'row' deben tener Data: null para evitar error de DataTables
-            if(tipo === 'becas') {
-                columnas = [
-                    { title: "ID", data: "id_becas" },
-                    { title: "Beneficiario", data: null, render: function(data, type, row) {
-                        return `${row.nombres} ${row.apellidos}<br><small>${row.tipo_cedula}-${row.cedula}</small>`;
-                    }},
-                    { title: "Banco", data: "tipo_banco" },
-                    { title: "Cuenta", data: "cta_bcv" },
-                    { title: "Empleado", data: null, render: function(data, type, row) {
-                        return `<small>${row.empleado_nombre} ${row.empleado_apellido}</small>`; 
-                    }},
-                    { title: "PDF", data: null, render: function(data, type, row) {
-                        return row.direccion_pdf ? `<a href="${BASE_URL}${row.direccion_pdf}" target="_blank" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>` : '-';
-                    }}
-                ];
-            } else if(tipo === 'exoneraciones') {
-                columnas = [
-                    { title: "ID", data: "id_exoneracion" },
-                    { title: "Beneficiario", data: null, render: function(data, type, row) {
-                        return `${row.nombres} ${row.apellidos}<br><small>${row.tipo_cedula}-${row.cedula}</small>`;
-                    }},
-                    { title: "Motivo", data: null, render: function(data, type, row) {
-                        return row.motivo === 'Otro' ? row.otro_motivo : row.motivo;
-                    }},
-                    { title: "Fecha", data: "fecha_creacion" },
-                    { title: "Docs", data: null, render: function(data, type, row) {
-                        let html = '';
-                        if(row.direccion_carta) html += `<a href="${BASE_URL}${row.direccion_carta}" target="_blank" class="btn btn-sm btn-primary me-1" title="Carta"><i class="fas fa-envelope"></i></a>`;
-                        if(row.direccion_estudiose) html += `<a href="${BASE_URL}${row.direccion_estudiose}" target="_blank" class="btn btn-sm btn-info text-white" title="Estudio SE"><i class="fas fa-file-invoice-dollar"></i></a>`;
-                        return html;
-                    }}
-                ];
-            } else if(tipo === 'fames') {
-                columnas = [
-                    { title: "ID", data: "id_fames" },
-                    { title: "Beneficiario", data: null, render: function(data, type, row) {
-                        return `${row.nombres} ${row.apellidos}<br><small>${row.tipo_cedula}-${row.cedula}</small>`;
-                    }},
-                    { title: "Patología", data: "nombre_patologia" },
-                    { title: "Ayuda", data: null, render: function(data, type, row) {
-                        return row.tipo_ayuda === 'Otro' ? row.otro_tipo : row.tipo_ayuda;
-                    }},
-                    { title: "Fecha", data: "fecha_creacion" }
-                ];
-            } else if(tipo === 'embarazadas') {
-                columnas = [
-                    { title: "ID", data: "id_gestion" },
-                    { title: "Beneficiario", data: null, render: function(data, type, row) {
-                        return `${row.nombres} ${row.apellidos}<br><small>${row.tipo_cedula}-${row.cedula}</small>`;
-                    }},
-                    { title: "Semanas", data: "semanas_gest" },
-                    { title: "Código Patria", data: "codigo_patria" },
-                    { title: "Estado", data: null, render: function(data, type, row) { 
-                        let color = row.estado === 'En proceso' ? 'warning' : 'success';
-                        return `<span class="badge bg-${color}">${row.estado}</span>`;
-                    }}
-                ];
-            }
-
-            // Inicializar DataTable
-            tablaTS = $('#tabla_ts').DataTable({
-                ajax: {
-                    url: `consultar_diagnosticos_json?tipo=${tipo}`,
-                    dataSrc: function(json) {
-                        if(!json.exito) {
-                            console.error(json.mensaje);
-                            return [];
-                        }
-                        return json.data;
-                    }
-                },
-                layout: {
-                    topStart: {
-                        buttons: [
-                            {
-                                extend: 'excel',
-                                text: '<i class="fas fa-file-excel"></i> Excel',
-                                className: 'btn btn-success',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    format: {
-                                        body: function (data, row, column, node) {
-                                            return data.replace(/<[^>]*>/g, '');
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                extend: 'pdf',
-                                text: '<i class="fas fa-file-pdf"></i> PDF',
-                                className: 'btn btn-danger',
-                                orientation: 'landscape',
-                                pageSize: 'A4',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: true
-                                },
-                            }
-                        ]
-                    },
-                },
-                columns: columnas,
-                ordering: true,
-                order: [[0, 'desc']],
-                pageLength: 10,
-                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
-                language: {
-                    url: 'plugins/DataTables/js/languaje.json'
-                },
-                responsive: true,
-                autoWidth: false
-            });
-        }
-    </script>
+    
 </body>
 </html>

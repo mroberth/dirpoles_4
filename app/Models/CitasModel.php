@@ -4,13 +4,39 @@ use App\Models\BusinessModel;
 use Exception;
 use Throwable;
 use PDO;
-use function count;
 use function in_array;
 
 class CitasModel extends BusinessModel{
     private $atributos = [];
 
     public function __set($name, $value){
+        switch($name){
+            case 'id_beneficiario':
+            case 'id_empleado':
+            case 'id_cita':
+            case 'estatus':
+                // Validar que sea un entero positivo
+                if(!is_numeric($value) || \intval($value) <= 0){
+                    throw new Exception("El campo $name debe ser un número entero válido.");
+                }
+                break;
+
+            case 'fecha':
+                // Validar formato Y-m-d
+                $d = \DateTime::createFromFormat('Y-m-d', $value);
+                if(!($d && $d->format('Y-m-d') === $value)){
+                    throw new Exception("La fecha debe tener el formato YYYY-MM-DD.");
+                }
+                break;
+
+            case 'hora':
+                // Validar formato H:i
+                // Permitimos H:i y H:i:s por flexibilidad interna, pero el input suele ser H:i
+                if(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)){
+                    throw new Exception("La hora debe tener el formato HH:MM válido.");
+                }
+                break;
+        }
         $this->atributos[$name] = $value;
     }
 
@@ -24,7 +50,7 @@ class CitasModel extends BusinessModel{
                 return $this->registrarCita();
 
             case 'obtener_beneficiario_cita':
-                return $this->obtener_beneficiario_cita();
+                return $this->obtenerBeneficiario();
 
             case 'obtener_empleado_cita':
                 return $this->obtener_empleado_cita();
@@ -103,27 +129,20 @@ class CitasModel extends BusinessModel{
         }
     }
 
-    private function obtener_beneficiario_cita(){
+    private function obtenerBeneficiario(){
         try{
-            $query = "SELECT 
-                nombres, 
-                apellidos, 
-                cedula, 
-                tipo_cedula, 
-                CONCAT(nombres, ' ', COALESCE(apellidos, '')) AS nombre_completo,
-                CONCAT(tipo_cedula, '-', cedula) AS cedula_completa
-            FROM beneficiario
-            WHERE id_beneficiario = :id_beneficiario";
+            $query = "SELECT CONCAT(nombres, ' ', apellidos, ' (', tipo_cedula, ' - ', cedula, ')') as nombre_completo 
+                      FROM beneficiario 
+                      WHERE id_beneficiario = :id_beneficiario";
+            
             $stmt = $this->conn->prepare($query);
             $stmt->bindValue(':id_beneficiario', $this->__get('id_beneficiario'), PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado ? $resultado['nombre_completo'] : '';
 
-        } catch (Throwable $e){
-            return [
-                'exito' => false,
-                'mensaje' => $e->getMessage()
-            ];
+        } catch(Throwable $e){
+            return "Beneficiario desconocido"; 
         }
     }
 
@@ -252,6 +271,7 @@ class CitasModel extends BusinessModel{
                     CONCAT(b.nombres, ' ', b.apellidos) AS beneficiario,
                     b.cedula,
                     b.tipo_cedula,
+                    b.id_beneficiario,
                     CONCAT(b.tipo_cedula, '-', b.cedula) as cedula_beneficiario,
                     CONCAT(e.nombre, ' ', e.apellido) AS empleado,
                     c.estatus
@@ -264,7 +284,7 @@ class CitasModel extends BusinessModel{
                 $query .= " WHERE c.id_empleado = :id_empleado";
             }
             
-            $query .= " ORDER BY c.fecha DESC, c.hora DESC";
+            $query .= " ORDER BY c.fecha_creacion DESC";
             
             $stmt = $this->conn->prepare($query);
             

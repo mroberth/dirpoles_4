@@ -114,6 +114,9 @@ class BeneficiarioModel extends BusinessModel{
         switch ($action) {
             case 'obtener_pnf':
                 return $this->obtenerPNF();
+
+            case 'obtener_beneficiario':
+                return $this->obtenerBeneficiario();
                 
             case 'registrar_beneficiario':
                 return $this->registrar_beneficiario();
@@ -151,6 +154,23 @@ class BeneficiarioModel extends BusinessModel{
 
             default:
                 throw new Exception('Acción no permitida');
+        }
+    }
+
+    private function obtenerBeneficiario(){
+        try{
+            $query = "SELECT CONCAT(nombres, ' ', apellidos, ' (', tipo_cedula, ' - ', cedula, ')') as nombre_completo 
+                      FROM beneficiario 
+                      WHERE id_beneficiario = :id_beneficiario";
+            
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id_beneficiario', $this->__get('id_beneficiario'), PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado ? $resultado['nombre_completo'] : '';
+
+        } catch(Throwable $e){
+            return "Beneficiario desconocido"; 
         }
     }
 

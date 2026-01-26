@@ -37,6 +37,12 @@ class OrientacionModel extends BusinessModel{
             case 'eliminar_orientacion':
                 return $this->eliminar_orientacion();
 
+            case 'stats_admin':
+                return $this->statsAdmin();
+
+            case 'stats_empleado':
+                return $this->statsEmpleado();
+
             default:
                 throw new Exception('Acción no permitida');
         }
@@ -228,6 +234,95 @@ class OrientacionModel extends BusinessModel{
 
         } catch(Throwable $e){
             $this->conn->rollBack();
+            return [
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
+
+    private function statsAdmin(){
+        try{
+            $query = "SELECT COUNT(*) AS total FROM orientacion";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+            return [
+                'exito' => true,
+                'total' => $total
+            ];
+
+        } catch(Throwable $e){
+            return [
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
+
+    private function statsEmpleado(){
+        try {
+            // Obtener ID del empleado
+            $id_empleado = $this->__get('id_empleado');
+            
+            // 1. Total de orientaciones (con JOIN a solicitud_de_servicio)
+            $query1 = "SELECT COUNT(*) as total 
+                    FROM orientacion o
+                    INNER JOIN solicitud_de_servicio sds ON o.id_solicitud_serv = sds.id_solicitud_serv
+                    WHERE sds.id_empleado = :id_empleado";
+            $stmt1 = $this->conn->prepare($query1);
+            $stmt1->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
+            $stmt1->execute();
+            $total_orientaciones = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+            // 2. Orientaciones del mes actual
+            $query2 = "SELECT COUNT(*) as total_mes 
+                    FROM orientacion o
+                    INNER JOIN solicitud_de_servicio sds ON o.id_solicitud_serv = sds.id_solicitud_serv
+                    WHERE sds.id_empleado = :id_empleado 
+                    AND MONTH(o.fecha_creacion) = MONTH(CURRENT_DATE()) 
+                    AND YEAR(o.fecha_creacion) = YEAR(CURRENT_DATE())";
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
+            $stmt2->execute();
+            $orientaciones_mes = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            // 3. Orientaciones sin indicaciones (campo vacío o NULL)
+            $query3 = "SELECT COUNT(*) as sin_indicaciones 
+                    FROM orientacion o
+                    INNER JOIN solicitud_de_servicio sds ON o.id_solicitud_serv = sds.id_solicitud_serv
+                    WHERE sds.id_empleado = :id_empleado 
+                    AND (o.indicaciones_orientacion IS NULL 
+                        OR o.indicaciones_orientacion = '' 
+                        OR TRIM(o.indicaciones_orientacion) = '')";
+            $stmt3 = $this->conn->prepare($query3);
+            $stmt3->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
+            $stmt3->execute();
+            $sin_indicaciones = $stmt3->fetch(PDO::FETCH_ASSOC);
+
+            // 4. Orientaciones con observaciones adicionales (campo no vacío)
+            $query4 = "SELECT COUNT(*) as con_observaciones 
+                    FROM orientacion o
+                    INNER JOIN solicitud_de_servicio sds ON o.id_solicitud_serv = sds.id_solicitud_serv
+                    WHERE sds.id_empleado = :id_empleado 
+                    AND o.obs_adic_orientacion IS NOT NULL 
+                    AND o.obs_adic_orientacion != '' 
+                    AND TRIM(o.obs_adic_orientacion) != ''";
+            $stmt4 = $this->conn->prepare($query4);
+            $stmt4->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
+            $stmt4->execute();
+            $con_observaciones = $stmt4->fetch(PDO::FETCH_ASSOC);
+            
+            return [
+                'exito' => true,
+                'total_orientaciones' => $total_orientaciones['total'] ?? 0,
+                'orientaciones_mes' => $orientaciones_mes['total_mes'] ?? 0,
+                'sin_indicaciones' => $sin_indicaciones['sin_indicaciones'] ?? 0,
+                'con_observaciones' => $con_observaciones['con_observaciones'] ?? 0
+            ];
+
+        } catch (Throwable $e) {
             return [
                 'exito' => false,
                 'mensaje' => $e->getMessage()
