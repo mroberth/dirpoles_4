@@ -209,30 +209,30 @@ $(function () {
         // Asignar nuevos eventos con delegación
         $(document).on('click', '.btn-ver', function () {
             const id = $(this).data('id');
-            if (typeof verDiagnostico !== 'undefined') {
+            if (typeof verInsumo !== 'undefined') {
                 verInsumo(id);
             } else {
-                console.error('Función verDiagnostico no está definida');
+                console.error('Función verInsumo no está definida');
                 alert('Función de visualización no disponible');
             }
         });
 
         $(document).on('click', '.btn-editar', function () {
             const id = $(this).data('id');
-            if (typeof editarDiagnostico !== 'undefined') {
+            if (typeof editarInsumo !== 'undefined') {
                 editarInsumo(id);
             } else {
-                console.error('Función editarDiagnostico no está definida');
+                console.error('Función editarInsumo no está definida');
                 alert('Función de edición no disponible');
             }
         });
 
         $(document).on('click', '.btn-eliminar', function () {
             const id = $(this).data('id');
-            if (typeof eliminarDiagnostico !== 'undefined') {
+            if (typeof eliminarInsumo !== 'undefined') {
                 eliminarInsumo(id);
             } else {
-                console.error('Función eliminarDiagnostico no está definida');
+                console.error('Función eliminarInsumo no está definida');
                 alert('Función de eliminación no disponible');
             }
         });

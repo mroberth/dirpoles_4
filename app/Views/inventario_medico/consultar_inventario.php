@@ -71,20 +71,21 @@ include 'app/Views/template/head.php';
    <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/consultar_inventario.js"></script>
    <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/validar_entrada.js"></script>
    <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/validar_salida.js"></script>
+   <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/consultar/editarInsumo.js"></script>
+   <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/consultar/eliminarInsumo.js"></script>
+   <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/consultar/verInsumo.js"></script>
+   <script src="<?= BASE_URL ?>dist/js/modulos/inventario_medico/consultar/validarEditarInsumo.js"></script>
 
    <!-- Modal Genérico -->
     <div class="modal fade" id="modalGenerico" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalLabel">Título del Modal</h5>
+                    <h5 class="modal-title" id="modalGenericoTitle">Título del Modal</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modalContenido">
                     <!-- Contenido dinámico aquí -->
-                </div>
-                <div class="modal-footer" id="modalFooter">
-                    <!-- Botones dinámicos aquí -->
                 </div>
             </div>
         </div>

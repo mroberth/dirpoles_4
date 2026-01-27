@@ -22,6 +22,26 @@ Router::get('inventario_data_json', function() {
     inventario_data_json();
 });
 
+Router::get('inventario_detalle', function() {
+    load_controller('invMedicinaController.php');
+    inventario_detalle();
+});
+
+Router::get('presentaciones_json', function() {
+    load_controller('invMedicinaController.php');
+    presentacion_insumo_json();
+});
+
+Router::post('actualizar_insumo', function() {
+    load_controller('invMedicinaController.php');
+    actualizar_insumo();
+});
+
+Router::post('eliminar_insumo', function() {
+    load_controller('invMedicinaController.php');
+    eliminar_insumo();
+});
+
 Router::get('movimientos_data_json', function() {
     load_controller('invMedicinaController.php');
     movimientos_data_json();

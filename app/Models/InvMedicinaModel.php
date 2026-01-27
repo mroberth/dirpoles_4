@@ -56,6 +56,12 @@ class InvMedicinaModel extends BusinessModel {
             case 'registrar_insumo':
                 return $this->registrar_insumo();
 
+            case 'actualizar_insumo':
+                return $this->actualizarInsumo();
+
+            case 'eliminar_insumo':
+                return $this->inventario_eliminar();
+
             case 'consultar_inventario':
                 return $this->consultar_inventario();
 
@@ -79,6 +85,9 @@ class InvMedicinaModel extends BusinessModel {
 
             case 'registrar_salida':
                 return $this->registrar_salida();
+
+            case 'inventario_detalle':
+                return $this->inventario_detalle();
 
             default:
                 throw new Exception('Acción no permitida');
@@ -191,6 +200,117 @@ class InvMedicinaModel extends BusinessModel {
         }
     }
 
+    private function actualizarInsumo(){
+        try{
+            $query = "UPDATE insumos SET 
+                        nombre_insumo = :nombre_insumo,
+                        tipo_insumo = :tipo_insumo,
+                        id_presentacion = :id_presentacion,
+                        fecha_vencimiento = :fecha_vencimiento,
+                        descripcion = :descripcion
+                      WHERE id_insumo = :id_insumo";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id_insumo', $this->__get('id_insumo'), PDO::PARAM_INT);
+            $stmt->bindValue(':nombre_insumo', $this->__get('nombre_insumo'), PDO::PARAM_STR);
+            $stmt->bindValue(':tipo_insumo', $this->__get('tipo_insumo'), PDO::PARAM_STR);
+            $stmt->bindValue(':id_presentacion', $this->__get('id_presentacion'), PDO::PARAM_INT);
+            $stmt->bindValue(':fecha_vencimiento', $this->__get('fecha_vencimiento'), PDO::PARAM_STR);
+            $stmt->bindValue(':descripcion', $this->__get('descripcion'), PDO::PARAM_STR);
+            $stmt->execute();
+
+            return [
+                'exito' => true,
+                'mensaje' => 'Insumo actualizado exitosamente.'
+            ];
+
+        } catch(Throwable $e){
+            return [
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
+
+    private function inventario_eliminar() {
+        try {
+            if($this->validar_insumo_medicina($this->__get('id_insumo'))){
+                return [
+                    'exito' => false,
+                    'mensaje' => 'No se puede eliminar el insumo porque está relacionado con un medicamento.'
+                ];
+            }
+
+            if($this->validar_stock($this->__get('id_insumo'))){
+                return [
+                    'exito' => false,
+                    'mensaje' => 'No se puede eliminar el insumo porque tiene stock disponible.'
+                ];
+            }
+
+            if ($this->tiene_movimientos_reales($this->__get('id_insumo'))) {
+                return [
+                    'exito' => false,
+                    'mensaje' => 'No se puede eliminar el insumo porque ya tiene movimientos de entrada o salida.'
+                ];
+            }
+
+            $this->conn->beginTransaction();
+    
+            // 1. Eliminar registros relacionados en inventario_medico
+            $query1 = "DELETE FROM inventario_medico WHERE id_insumo = :id_insumo";
+            $stmt1 = $this->conn->prepare($query1);
+            $stmt1->bindValue(':id_insumo', $this->__get('id_insumo'), PDO::PARAM_INT);
+            $stmt1->execute();
+    
+            // 2. Eliminar el insumo
+            $query2 = "DELETE FROM insumos WHERE id_insumo = :id_insumo";
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->bindValue(':id_insumo', $this->__get('id_insumo'), PDO::PARAM_INT);
+            $stmt2->execute();
+    
+            $this->conn->commit();
+            return [
+                'exito' => true,
+                'mensaje' => 'Insumo eliminado exitosamente.'
+            ];
+
+        } catch (Throwable $e) {
+            $this->conn->rollBack();
+            return [
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
+
+    private function validar_stock($id_insumo) {
+        $query = "SELECT cantidad FROM insumos WHERE id_insumo = :id_insumo";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':id_insumo', $id_insumo, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $cantidad = $stmt->fetchColumn();
+        return ($cantidad !== false && $cantidad > 0);
+    }
+
+    private function validar_insumo_medicina($id_insumo) {
+        $query = "SELECT COUNT(*) FROM detalle_insumo WHERE id_insumo = :id_insumo";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':id_insumo', $id_insumo, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return ($stmt->fetchColumn() > 0);
+    }
+
+    private function tiene_movimientos_reales($id_insumo) {
+        $query = "SELECT COUNT(*) FROM inventario_medico 
+                WHERE id_insumo = :id_insumo AND tipo_movimiento != 'Registro'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':id_insumo', $id_insumo, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn() > 0;
+    }
     private function consultar_inventario(){
         try{
             $query = "SELECT insumos.*, presentacion_insumo.nombre_presentacion AS presentacion 
@@ -201,6 +321,35 @@ class InvMedicinaModel extends BusinessModel {
 
         } catch(Throwable $e){
             return [];
+        }
+    }
+
+    private function inventario_detalle(){
+        try{
+            $query = "SELECT 
+                        i.id_insumo,
+                        i.nombre_insumo,
+                        i.descripcion,
+                        i.id_presentacion,
+                        p.nombre_presentacion,
+                        i.tipo_insumo,
+                        i.fecha_vencimiento,
+                        i.fecha_creacion,
+                        i.cantidad,
+                        i.estatus
+                    FROM insumos i
+                    JOIN presentacion_insumo p ON i.id_presentacion = p.id_presentacion
+                    WHERE i.id_insumo = :id_insumo";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id_insumo', $this->__get('id_insumo'), PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        } catch(Throwable $e){
+            return [
+                'exito' => false,
+                'mensaje' => $e->getMessage()
+            ];
         }
     }
 
